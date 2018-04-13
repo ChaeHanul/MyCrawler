@@ -1,2 +1,2 @@
-# MyCroler
-## Ahnlab.com Malware Detection Name and Malware Category Name Croler
+# MyCrawler
+## Ahnlab.com Malware Detection Name and Malware Category Name Crawler
