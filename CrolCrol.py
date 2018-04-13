@@ -26,12 +26,27 @@ def get_Malware_Type_list(Malware_Type_list,pageNum) :
     req = requests.get(ahnlab_URL+'curPage='+pageNum)
     req_HTML = req.text
     BS = BeautifulSoup(req_HTML,"html.parser")
+    tbody = BS.find('tbody')
+    tr_list = tbody.find_all('tr')
+    for tr_item in tr_list :
+        try:
+            Malware_Type_list.append(tr_item.get_text().split()[2])
+        except Exception as e:
+            print(e)
+            print("------------------------------")
+            print("item is {0}".format(item.string))
+            print("------------------------------")
+            print("pageNum is {0}".format(pageNum))
+    return len(tr_list)
+            
     
 def Croler() :
     Malware_Name_list  = []
+    Malware_Type_list  = []
     for pageNum in range(1,3416):
-        get_Malware_Name_list(Malware_Name_list,str(pageNum))
-    print("the number of Malware_Name_list is {0}".format(str(len(Malware_Name_list))))
-    
+        #get_Malware_Name_list(Malware_Name_list,str(pageNum))
+        get_Malware_Type_list(Malware_Type_list,str(pageNum))
+    print("the number of Malware_Name_list is {0}".format(str(len(Malware_Type_list))))
+
 if __name__ == "__main__" :
     Croler()
