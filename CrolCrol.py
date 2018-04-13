@@ -1,6 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
 
+##전역으로 다룸
+Malware_Type_Dictionary = {}
+
+##악성코드 분석 정보에 있는 것 중 진단명만
 def get_Malware_Name_list(Malware_Name_list,pageNum) :
     ahnlab_URL = 'http://www.ahnlab.com/kr/site/securityinfo/asec/asecCodeList.do?'
     
@@ -20,6 +24,7 @@ def get_Malware_Name_list(Malware_Name_list,pageNum) :
             print("pageNum is {0}".format(pageNum))
     return len(fProd_list)
 
+##악성코드 분석 정보에 있는 것 중 유형만
 def get_Malware_Type_list(Malware_Type_list,pageNum) :
     ahnlab_URL = 'http://www.ahnlab.com/kr/site/securityinfo/asec/asecCodeList.do?'
     
@@ -39,14 +44,24 @@ def get_Malware_Type_list(Malware_Type_list,pageNum) :
             print("pageNum is {0}".format(pageNum))
     return len(tr_list)
             
-    
+
+## Croler는 딕셔너리에 유형에 해당되는 악성코드의 개수를 파악한다.
+## 개수는 악성코드 실제 총 개수와 비교했을 때 덜 들어간게 있는가 파악하기 위한 용도로 씀
 def Croler() :
-    Malware_Name_list  = []
-    Malware_Type_list  = []
+    ###Malware_Type_Dictionary = {}
+    Total_number_of_Malware_Type_item = 0
     for pageNum in range(1,3416):
+        Malware_Name_list  = []
+        Malware_Type_list  = []
         #get_Malware_Name_list(Malware_Name_list,str(pageNum))
-        get_Malware_Type_list(Malware_Type_list,str(pageNum))
-    print("the number of Malware_Name_list is {0}".format(str(len(Malware_Type_list))))
+        Total_number_of_Malware_Type_item += get_Malware_Type_list(Malware_Type_list,str(pageNum))
+        for item in Malware_Type_list:
+            if item in Malware_Type_Dictionary is True :
+                Malware_Type_Dictionary[item] += 1
+            else :
+                Malware_Type_Dictionary[item] = 1
+    print("the number of Malware_Type_list is {0}".format(str(Total_number_of_Malware_Type_item)))
+    print("the number of Malwrae_Type_Dictionary is {0}".format(str(sum(Malware_Type_Dictionary.values()))))
 
 if __name__ == "__main__" :
     Croler()
