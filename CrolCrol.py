@@ -12,7 +12,7 @@ ahnlab_URL = 'http://www.ahnlab.com/kr/site/securityinfo/asec/asecCodeList.do?'
 
 ##악성코드 분석 정보 페이지 데이터 긁어옴
 def get_Malware_Info_Page(dict_Malware_Info_Page,pageNum):
-    req = requests.get(ahnlab_URL+'curPage='+pageNum)
+    req = requests.get(ahnlab_URL+'curPage='+str(pageNum))
     req_HTML = req.text
     dict_Malware_Info_Page[pageNum] = req_HTML
     
@@ -35,21 +35,22 @@ def get_Malware_Name_list(Malware_Name_list,pageNum) :
 ##악성코드 분석 정보에 있는 것 중 유형만
 def get_Malware_Type_list(Malware_Type_list,pageNum) :
     BS = BeautifulSoup(dict_Malware_Info_Page[pageNum],"html.parser")
-    bbsList = BS.select('[class~=bbsList]')
+    bbsList = BS.select('[class~=bbsList]')[0]
     tbody = bbsList.find('tbody')
     tr_list = tbody.find_all('tr')
     for tr_item in tr_list :
         try:
-            Malware_Type_list.append(tr_item.get_text().split()[2])
-            if item in Malware_Type_Dictionary is True :
-                Malware_Type_Dictionary[item] += 1
+            tr_item_string = tr_item.get_text().split()[2]
+            Malware_Type_list.append()
+            if tr_item_string in Malware_Type_Dictionary is True :
+                Malware_Type_Dictionary[tr_item_string] += 1
             else :
-                Malware_Type_Dictionary[item] = 1
+                Malware_Type_Dictionary[tr_item_string] = 1
 
         except Exception as e:
             print(e)
             print("------------------------------")
-            print("item is {0}".format(item.string))
+            print("item is {0}".format(tr_item_string))
             print("------------------------------")
             print("pageNum is {0}".format(pageNum))
     return len(tr_list)
@@ -65,12 +66,11 @@ def Croler() :
     for pageNum in range(1,3416):
         get_Malware_Info_Page(dict_Malware_Info_Page,pageNum)
     print("finishing")
-    
-    #for pageNum in range(1,3416):
-        #get_Malware_Name_list(Malware_Name_list,str(pageNum))
-    #   get_Malware_Type_list(Malware_Type_list,str(pageNum))
-    #print("the number of Malware_Type_list is {0}".format(str(Total_number_of_Malware_Type_item)))
-    #print("the number of Malwrae_Type_Dictionary is {0}".format(str(sum(Malware_Type_Dictionary.values()))))
+    print(dict_Malware_Info_Page[1])
+    for pageNum in range(1,3416):
+       get_Malware_Type_list(Malware_Type_list,pageNum)
+    print("the number of Malware_Type_list is {0}".format(str(len(Malware_Type_list))))
+    print("the number of Malwrae_Type_Dictionary is {0}".format(str(sum(Malware_Type_Dictionary.values()))))
 
 if __name__ == "__main__" :
     Croler()
