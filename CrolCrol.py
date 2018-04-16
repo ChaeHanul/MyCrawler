@@ -43,7 +43,7 @@ def get_Malware_Type_list(Malware_Type_list,pageNum) :
         try:
             tr_item_string = tr_item.get_text().split()[2]
             Malware_Type_list.append(tr_item_string)
-            if tr_item_string in Malware_Type_Dictionary is True :
+            if tr_item_string in Malware_Type_Dictionary :
                 Malware_Type_Dictionary[tr_item_string] += 1
             else :
                 Malware_Type_Dictionary[tr_item_string] = 1
