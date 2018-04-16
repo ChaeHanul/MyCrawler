@@ -1,4 +1,5 @@
 import requests
+import operator
 from bs4 import BeautifulSoup
 
 ##전역으로 다룸
@@ -41,7 +42,7 @@ def get_Malware_Type_list(Malware_Type_list,pageNum) :
     for tr_item in tr_list :
         try:
             tr_item_string = tr_item.get_text().split()[2]
-            Malware_Type_list.append()
+            Malware_Type_list.append(tr_item_string)
             if tr_item_string in Malware_Type_Dictionary is True :
                 Malware_Type_Dictionary[tr_item_string] += 1
             else :
@@ -66,11 +67,18 @@ def Croler() :
     for pageNum in range(1,3416):
         get_Malware_Info_Page(dict_Malware_Info_Page,pageNum)
     print("finishing")
-    print(dict_Malware_Info_Page[1])
+    print("start to parse page")
     for pageNum in range(1,3416):
        get_Malware_Type_list(Malware_Type_list,pageNum)
     print("the number of Malware_Type_list is {0}".format(str(len(Malware_Type_list))))
     print("the number of Malwrae_Type_Dictionary is {0}".format(str(sum(Malware_Type_Dictionary.values()))))
+
+    print("print {key,value}")
+    print("-----------------")
+    
+    for k,v in sorted(Malware_Type_Dictionary.items(), key = operator.itemgetter(1), reverse=True):
+        print(k,v)
+    print("-------end-------")
 
 if __name__ == "__main__" :
     Croler()
